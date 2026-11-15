@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>HUMAN ATLS — Human Anatomy Atlas</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============ CORE & THEME VARIABLES ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel2: #f0fdf4;
+  --line: #e2e8f0;
+  --line2: #cbd5e1;
+  --txt: #0f172a;
+  --dim: #64748b;
+  --c1: #10b981;
+  --c2: #059669;
+  --r: 16px;
+  --shadow: 0 4px 15px -5px rgba(0,0,0,.05);
+}
+
+[data-theme="dark"] {
+  --bg: #060b19;
+  --panel: #0f172a;
+  --panel2: #1e293b;
+  --line: #1e293b;
+  --line2: #334155;
+  --txt: #f8fafc;
+  --dim: #94a3b8;
+  --c1: #00ffcc;
+  --c2: #00d4a8;
+  --shadow: 0 4px 20px -5px rgba(0,0,0,.5);
+}
+
+body{
+  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background:var(--bg); color:var(--txt); min-height:100vh; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; line-height:1.6;
+  transition: background-color .3s ease, color .3s ease;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit; cursor:pointer;}
+.ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none; transition: stroke .3s;}
+.ico.sm{width:15px;height:15px}
+.ico.lg{width:24px;height:24px}
+.wrap{width:min(1140px,92vw);margin-inline:auto}
+
+/* ============ AURORA BG ============ */
+.aurora{position:fixed;inset:0;z-index:-2;overflow:hidden; transition: background .3s ease;
+  background:radial-gradient(120% 85% at 50% -12%, var(--panel2) 0%, var(--bg) 62%)}
+.aurora i{position:absolute;display:block;border-radius:50%;filter:blur(80px);opacity:.3;mix-blend-mode:multiply;
+  animation:drift 26s ease-in-out infinite}
+[data-theme="dark"] .aurora i{mix-blend-mode:screen; opacity:0.15;}
+.aurora i:nth-child(1){width:46vw;height:46vw;background:#bbf7d0;top:-14vw;inset-inline-start:-8vw}
+.aurora i:nth-child(2){width:40vw;height:40vw;background:#e0f2fe;top:22vh;inset-inline-end:-12vw;animation-delay:-7s}
+.aurora i:nth-child(3){width:34vw;height:34vw;background:#dcfce7;bottom:-12vw;inset-inline-start:26vw;animation-delay:-13s}
+[data-theme="dark"] .aurora i:nth-child(1){background:#00ffcc;}
+[data-theme="dark"] .aurora i:nth-child(2){background:#4338ca;}
+[data-theme="dark"] .aurora i:nth-child(3){background:#00ffcc;}
+
+@keyframes drift{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  33%{transform:translate3d(5vw,-4vh,0) scale(1.14)}
+  66%{transform:translate3d(-4vw,5vh,0) scale(.9)}
+}
+
+/* ============ HEADER ============ */
+header{
+  position:sticky; top:0; z-index:60;
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  background:color-mix(in srgb, var(--panel) 85%, transparent);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 4px 30px -10px rgba(0,0,0,.03);
+  transition: all .3s ease;
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px; gap:16px;
+}
+.brand{ display:flex; align-items:center; gap:8px; transition:transform .2s; }
+.brand:hover{ transform:scale(1.02); }
+.en-name{
+  font-size:20px; font-weight:900; letter-spacing:0.5px; color:var(--txt);
+  display:flex; align-items:center; transition: color .3s; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.en-name .dot { color:var(--c1); font-size:26px; line-height:0; margin-inline-start:2px; transition: color .3s;}
+
+.navlinks{ display:flex; gap:8px; align-items:center; }
+.navlinks a{
+  font-size:14px; font-weight:600; color:var(--dim);
+  padding:6px 14px; border-radius:8px; transition:all 0.2s ease;
+}
+.navlinks a:hover{ color:var(--c1); background:var(--panel2); }
+
+.actions{ display:flex; align-items:center; gap:8px; }
+
+.iconbtn{
+  width:38px; height:38px; padding:0; border-radius:10px;
+  display:grid; place-items:center;
+  background:var(--panel); border:1px solid var(--line); color:var(--dim);
+  transition:all .2s ease;
+}
+.iconbtn:hover{
+  color:var(--c1); border-color:var(--c1); background:var(--panel2);
+  transform:translateY(-1px);
+}
+
+@media(max-width:820px){
+  .navlinks{display:none;}
+  .en-name{font-size:17px;}
+}
+
+/* ============ HERO SECTION ============ */
+.hero{padding:80px 0 60px;text-align:center;position:relative;max-width: 800px; margin: 0 auto;}
+.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.3;font-weight:900;letter-spacing:-1px;color:var(--txt)}
+.grad{background:linear-gradient(100deg,var(--c1),var(--c2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:650px;margin:18px auto 0;color:var(--dim);font-size:17px;line-height:1.9;font-weight:500}
+.hero-actions{display:flex;gap:12px;margin-top:32px;justify-content:center;flex-wrap:wrap}
+
+.btn-primary{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:12px 24px; border-radius:12px; font-size:15px; font-weight:700;
+  background:var(--c1); color:#fff; border:none;
+  box-shadow:0 6px 20px -6px var(--c1);
+  transition:all .25s ease;
+}
+[data-theme="dark"] .btn-primary { color: #000; box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+.btn-primary:hover { background:var(--c2); transform:translateY(-2px); }
+.btn-ghost{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:12px 24px; border-radius:12px; font-size:15px; font-weight:700;
+  background:var(--panel); color:var(--txt); border:1px solid var(--line);
+  transition:all .25s ease;
+}
+.btn-ghost:hover { border-color:var(--line2); background:var(--panel2); transform:translateY(-2px); }
+
+/* ============ SECTION ============ */
+section{padding:40px 0;scroll-margin-top:80px}
+.sec-head{margin-bottom:28px; text-align: center;}
+.sec-head h2{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.5px}
+.sec-head p{color:var(--dim);font-size:16px;margin-top:8px;font-weight:500}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:2px;color:var(--c1);margin-bottom:10px;display:block}
+
+/* ============ 3D TILT CARDS ============ */
+.tilt{position:relative;transform-style:preserve-3d;will-change:transform;
+  transition:transform .3s ease-out,box-shadow .3s,border-color .3s;box-shadow:var(--shadow)}
+.tilt:hover{box-shadow:0 20px 40px -15px rgba(16,185,129,.15);border-color:var(--c1)}
+[data-theme="dark"] .tilt:hover { box-shadow: 0 20px 40px -15px rgba(0,255,204,.2); }
+.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  transition:opacity .35s;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(16,185,129,.06),transparent 60%)}
+[data-theme="dark"] .tilt::after { background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(0,255,204,.08),transparent 60%)}
+.tilt:hover::after{opacity:1}
+
+/* ============ FEATURES ============ */
+.features-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-bottom:50px}
+.feature-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:30px;text-align:center;}
+.feature-card .micon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;color:var(--c1);
+  background:var(--panel2);border:1px solid var(--line); margin: 0 auto 20px;}
+.feature-card h3{font-size:19px;font-weight:800;color:var(--txt);margin-bottom:12px}
+.feature-card p{font-size:15px;color:var(--dim);line-height:1.8;font-weight:500}
+
+/* ============ KNOWLEDGE BASE TABS ============ */
+.kb-container{background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.kb-tabs{display:flex;background:var(--panel2);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;}
+.kb-tabs::-webkit-scrollbar{display:none}
+.kb-tab{padding:18px 24px;font-size:16px;font-weight:700;color:var(--dim);cursor:pointer;border-bottom:3px solid transparent;transition:.2s;white-space:nowrap;flex:1;text-align:center}
+.kb-tab:hover{color:var(--txt);background:var(--panel)}
+.kb-tab.active{color:var(--c1);border-bottom-color:var(--c1);background:var(--panel)}
+.kb-content{padding:40px;}
+.kb-pane{display:none;animation:fadeUp .4s ease}
+.kb-pane.active{display:block}
+.kb-pane h4{font-size:24px;font-weight:800;color:var(--txt);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.kb-pane p{font-size:16.5px;color:var(--dim);line-height:2;margin-bottom:18px;font-weight:500;text-align:justify;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media(max-width:768px){
+  .kb-content{padding:24px;}
+  .kb-pane h4{font-size:20px}
+  .kb-pane p{font-size:15px}
+  .hero h1{font-size:30px}
+}
+
+/* ============ PRICING ============ */
+.pgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.plan{position:relative;padding:20px 18px;display:flex;flex-direction:column;gap:12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;transition:.3s;box-shadow:var(--shadow)}
+.plan:hover{transform:translateY(-4px);border-color:var(--c1);box-shadow:0 16px 30px -16px rgba(16,185,129,.2)}
+.plan.featured{border-color:var(--c1);
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  box-shadow:0 20px 40px -24px rgba(16,185,129,.2)}
+.plan .ribbon{position:absolute;top:-10px;inset-inline-start:18px;font-size:11px;font-weight:800;
+  padding:4px 12px;border-radius:100px;color:#fff;background:var(--c1);
+  letter-spacing:.4px;box-shadow:0 4px 12px -4px rgba(16,185,129,.4)}
+[data-theme="dark"] .plan .ribbon { color: #000; }
+.plan h4{font-size:15px;font-weight:700;color:var(--dim);letter-spacing:.3px; text-transform: capitalize;}
+.plan .amt{display:flex;align-items:baseline;gap:6px;direction:ltr;justify-content:flex-start}
+.plan .amt b{font-size:32px;font-weight:800;letter-spacing:-1px;color:var(--txt)}
+.plan .amt span{font-size:14px;color:var(--dim);font-weight:600}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin:6px 0 10px;flex:1}
+.plan li{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--dim);line-height:1.6;font-weight:500}
+.plan li .ico{color:var(--c1);margin-top:3px}
+.plan .btn { width: 100%; padding:10px; border-radius:10px; font-size:14px; font-weight:700; text-align:center;}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--line);margin-top:40px;padding:50px 0 30px;background:var(--panel); text-align: center; transition: background .3s;}
+.footer-grid{display:flex;flex-direction:column;gap:40px;}
+
+.payment-section, .contact-section { display: flex; flex-direction: column; gap:16px; align-items: center; }
+.footer-title { font-size: 16px; font-weight: 800; color: var(--txt); display: flex; align-items: center; gap: 8px; }
+.footer-title::before, .footer-title::after { content: ""; height: 1px; width: 30px; background: var(--line2); }
+.payment-methods, .contact-methods { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+.icon-link { 
+  display: flex; align-items: center; gap: 8px; padding: 10px 18px; 
+  border-radius: 12px; background: var(--panel2); border: 1px solid var(--line); 
+  transition: all 0.25s ease; font-weight: 700; font-size: 14px; color: var(--txt);
+  text-decoration: none;
+}
+.icon-link:hover { 
+  transform: translateY(-4px); border-color: var(--line2); 
+  box-shadow: 0 10px 20px -10px rgba(0,0,0,0.1); background: var(--panel);
+}
+
+.icon-link svg { width: 22px; height: 22px; flex: none; }
+
+.icon-link.wa:hover { border-color: #25D366; color: #25D366; box-shadow: 0 10px 20px -10px rgba(37,211,102,0.3); }
+.icon-link.tg:hover { border-color: #0088cc; color: #0088cc; box-shadow: 0 10px 20px -10px rgba(0,136,204,0.3); }
+.icon-link.em:hover { border-color: #EA4335; color: #EA4335; box-shadow: 0 10px 20px -10px rgba(234,67,53,0.3); }
+
+.icon-link.paypal:hover { border-color: #003087; color: #003087; }
+.icon-link.usdt:hover { border-color: #26A17B; color: #26A17B; }
+.icon-link.payeer:hover { border-color: #0052FF; color: #0052FF; }
+.icon-link.superq:hover { border-color: #f59e0b; color: #d97706; }
+
+.brand-text{display:flex; flex-direction:column; justify-content:center; align-items:center; margin-top: 20px;}
+.brand-text .en-name{font-size:20px;margin-bottom:4px;}
+.brand-text .ar-name{font-size:14px;color:var(--dim);}
+
+/* ============ MODAL ============ */
+.modal{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:16px;
+  background:rgba(255,255,255,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity .25s}
+[data-theme="dark"] .modal { background: rgba(0,0,0,.7); }
+.modal.open{opacity:1;pointer-events:auto}
+.mcard-modal{width:min(620px,100%);max-height:90vh;overflow-y:auto;position:relative;padding:24px;
+  border-radius:20px;background:var(--panel);
+  border:1px solid var(--line);box-shadow:0 25px 50px -12px rgba(0,0,0,.15);
+  transform:translateY(14px) scale(.98);transition:transform .28s}
+.modal.open .mcard-modal{transform:none}
+.closebtn{position:absolute;top:14px;inset-inline-end:14px}
+.mcard-modal h3{font-size:20px;font-weight:800;margin-bottom:6px}
+.mcard-modal .sub{font-size:14px;color:var(--dim);margin-bottom:18px;font-weight:500}
+.field{width:100%;padding:12px 14px;border-radius:12px;font-size:15px;color:var(--txt);
+  background:var(--panel2);border:1px solid var(--line);outline:none;transition:.2s;font-family:inherit}
+.field:focus{border-color:var(--c1);background:var(--panel);box-shadow:0 0 0 4px rgba(16,185,129,.1)}
+textarea.field{min-height:250px;resize:vertical;direction:ltr;text-align:left;font-size:13px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.6}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.err{font-size:13px;color:#ef4444;margin-top:10px;min-height:18px;font-weight:600}
+.hint{font-size:13px;color:var(--dim);margin-top:12px;line-height:1.7}
+hr{border:none;border-top:1px solid var(--line);margin:20px 0}
+.label{font-size:14px;font-weight:700;color:var(--dim);display:block;margin-bottom:8px}
+
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SVG SPRITE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4 4 5-7 5 7 4-4v10H3V8z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7V5z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7.5 10.5L12 15l4.5-4.5M4 20h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
+  <symbol id="i-micro" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.2"/><path d="M9 12.5L7 18h10l-2-5.5M5 21h14"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5l-7-7.5a5 5 0 0 1 7-7 5 5 0 0 1 7 7l-7 7.5z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></symbol>
+  
+  <!-- Social Icons -->
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path fill="#0088cc" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></symbol>
+  <symbol id="i-em" viewBox="0 0 24 24"><path fill="#EA4335" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="22,6 12,13 2,6"></polyline></symbol>
+  
+  <!-- Payment Icons -->
+  <symbol id="i-usdt" viewBox="0 0 24 24"><path fill="#26A17B" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.07 8.7h-2.4v5.4h-2.2v-5.4h-2.4V8.2h7v2.5z"/></symbol>
+  <symbol id="i-paypal" viewBox="0 0 24 24"><path fill="#003087" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516h4.28c.56 0 1.04-.41 1.12-.96l.083-.531.617-3.91a1.13 1.13 0 0 1 1.11-.96h.696c3.03 0 5.41-1.233 6.13-4.802.34-1.66.183-3.032-1.06-3.985z"/></symbol>
+  <symbol id="i-payeer" viewBox="0 0 24 24"><path fill="#0052FF" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-4H9v-2h4v6z"/></symbol>
+  <symbol id="i-superq" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="none" stroke="#FFD700" stroke-width="3.5"/>
+    <circle cx="12" cy="12" r="2" fill="#FFD700"/>
+    <line x1="14.5" y1="14.5" x2="19" y2="19" stroke="#FFD700" stroke-width="3.5" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- ============ LIGHT AURORA BG ============ -->
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap nav">
+    
+    <a href="#" class="brand">
+      <span class="en-name">HUMAN&nbsp;ATLS<span class="dot">.</span></span>
+    </a>
+    
+    <nav class="navlinks">
+      <a href="#knowledge">الموسوعة</a>
+      <a href="#pricing">الخطط والأسعار</a>
+    </nav>
+
+    <div class="actions">
+      <!-- زر الوضع الليلي -->
+      <button class="iconbtn" id="themeToggle" aria-label="Toggle Theme">
+        <svg class="ico sm" id="themeIcon"><use href="#i-moon"/></svg>
+      </button>
+
+      <!-- لوحة المالك -->
+      <button class="iconbtn" id="adminOpen" aria-label="Admin Panel">
+        <svg class="ico sm"><use href="#i-lock"/></svg>
+      </button>
+    </div>
+    
+  </div>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<div class="wrap hero">
+  <h1>موسوعتك الشاملة في<br><span class="grad">التشريح وعلم الأنسجة</span></h1>
+  <p>تطبيق HUMAN ATLS هو دليلك الرقمي المتكامل لفهم بنية الجسم البشري. يجمع بين دقة التشريح، وعمق علم الأنسجة، وتفاصيل أعضاء الجسم في واجهة واحدة سريعة، أنيقة، وتعمل دون اتصال بالإنترنت.</p>
+  <div class="hero-actions">
+    <a href="#knowledge" class="btn-primary"><svg class="ico sm"><use href="#i-play"/></svg> استكشف المحتوى</a>
+    <a href="#pricing" class="btn-ghost">الخطط والأسعار</a>
+  </div>
+</div>
+
+<!-- ============ FEATURES / OVERVIEW ============ -->
+<section>
+  <div class="wrap">
+    <div class="features-grid">
+      <article class="feature-card tilt reveal">
+        <div class="micon"><svg class="ico lg"><use href="#i-layers"/></svg></div>
+        <h3>علم التشريح (Anatomy)</h3>
+        <p>دراسة معمقة لبنية الجسم البشري، الأجهزة الحيوية، والعلاقات المكانية بين العضلات، العظام، والمفاصل. فهم دقيق يساعدك على تحليل الحركة والوقاية من الإصابات.</p>
+      </article>
+
+      <article class="feature-card tilt reveal">
+        <div class="micon"><svg class="ico lg"><use href="#i-micro"/></svg></div>
+        <h3>علم الأنسجة (Histology)</h3>
+        <p>استكشاف التركيب المجهري للخلايا والأنسجة. يغطي التطبيق الأنسجة الطلائية، الضامة، العضلية، والعصبية، مما يمنحك فهماً أعمق لفسيولوجيا الجسم البشري.</p>
+      </article>
+
+      <article class="feature-card tilt reveal">
+        <div class="micon"><svg class="ico lg"><use href="#i-heart"/></svg></div>
+        <h3>أعضاء الجسم (Body Parts)</h3>
+        <p>نظرة تفصيلية على كل عضو ووظائفه الحيوية. من الدماغ والقلب إلى الأعضاء الداخلية، نستعرض كيفية عملها وتكاملها للحفاظ على استمرارية الحياة.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KNOWLEDGE BASE TABS ============ -->
+<section id="knowledge">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">KNOWLEDGE BASE</span>
+      <h2>موسوعة المحتوى</h2>
+      <p>تصفح الشروحات العلمية المطولة لكل ما يتعلق بالجسم البشري.</p>
+    </div>
+
+    <div class="kb-container tilt reveal">
+      <div class="kb-tabs">
+        <div class="kb-tab active" data-tab="tab-anatomy">التشريح (Anatomy)</div>
+        <div class="kb-tab" data-tab="tab-histology">الأنسجة (Histology)</div>
+        <div class="kb-tab" data-tab="tab-organs">الأعضاء (Body Parts)</div>
+      </div>
+
+      <div class="kb-content">
+        <div class="kb-pane active" id="tab-anatomy">
+          <h4><svg class="ico lg" style="color:var(--c1)"><use href="#i-layers"/></svg> علم التشريح البشري (Macroscopic Anatomy)</h4>
+          <p>يُعنى علم التشريح بدراسة الشكل والبنية الداخلية للكائن الحي، ويشكل حجر الأساس الذي تُبنى عليه كافة العلوم الطبية والرياضية. يركز تطبيق HUMAN ATLS على التشريح العضلي الهيكلي (Musculoskeletal Anatomy)، موفراً وصفاً تفصيلياً للهيكل العظمي، والمفاصل التي تربط العظام، والعضلات التي تحركها. يتم تحليل كل عضلة من حيث نقطة المنشأ (Origin) ونقطة المرتكز (Insertion)، والوظيفة الحركية التي تؤديها عند الانقباض، مما يمنحك خريطة واضحة لكيفية توليد الحركة.</p>
+          <p>علاوة على ذلك، يستعرض التطبيق الأربطة (Ligaments) والأوتار (Tendons) التي تثبت المفاصل وتنقل القوة. وفهم هذه التفاصيل التشريحية لا يقتصر على الأطباء، بل يمتد ليشمل كل شخص يسعى لتحسين أدائه الحركي، الوقاية من الإصابات الشائعة (مثل تمزق الأربطة الصليبية أو التهاب الأوتار)، وفهم الميكانيكا الحيوية للجسم (Biomechanics) في مختلف الأنشطة اليومية والرياضية.</p>
+        </div>
+
+        <div class="kb-pane" id="tab-histology">
+          <h4><svg class="ico lg" style="color:var(--c1)"><use href="#i-micro"/></svg> علم الأنسجة المجهري (Microscopic Histology)</h4>
+          <p>يغوص علم الأنسجة في أعماق البنية المجهرية للخلايا ليكشف عن كيفية عمل الأجهزة على المستوى الجزيئي. يتناول التطبيق الأنواع الأربعة الرئيسية للأنسجة التي يتكون منها جسم الإنسان: النسيج الطلائي (Epithelial) الذي يغطي الأسطح ويحمي الأعضاء، النسيج الضام (Connective) الذي يدعم ويربط ويشمل العظام والدم والدهون، النسيج العضلي (Muscle) المسؤول عن توليد القوة والحركة، والنسيج العصبي (Nervous) الذي ينقل الإشارات الكهربائية للتحكم بكل شيء.</p>
+          <p>من خلال هذا القسم، ستتعرف على التركيب الدقيق للعضلات الهيكلية، وكيف تتكون من حزم من الألياف (Myofibrils) التي تحتوي على خيوط الأكتين والميوسين المسؤولة عن الانقباض. كما يشرح التطبيق الفروق الجوهرية بين الألياف العضلية السريعة الانتفاض (Type II) المخصصة للقوة والسرعة، والألياف البطيئة الانتفاض (Type I) المخصصة للتحمل. فهم علم الأنسجة يمنحك رؤية أعمق لفسيولوجيا الجسم وكيفية استجابة الخلايا للتدريب والتأهيل والشفاء.</p>
+        </div>
+
+        <div class="kb-pane" id="tab-organs">
+          <h4><svg class="ico lg" style="color:var(--c1)"><use href="#i-heart"/></svg> أعضاء الجسم ووظائفها الحيوية (Organs & Systems)</h4>
+          <p>يتكون جسم الإنسان من شبكة معقدة من الأجهزة (Systems) التي تتألف من أعضاء (Organs) تعمل معاً بانسجام تام لضمان استمرارية الحياة. في هذا القسم، نسلط الضوء على الأعضاء الحيوية التي تقف خلف كل حركة وتفكير. من الدماغ (Brain) الذي يُعد مركز القيادة والتحكم في الجهاز العصبي، والقلب (Heart) الذي يعمل كمضخة لا تكل لضخ الدم المحمل بالأكسجين، إلى الرئتين (Lungs) التي تتبادل الغازات وتزود الجسم بالطاقة.</p>
+          <p>لا يقتصر التطبيق على عرض وظائف الأعضاء بمعزل عن بعضها، بل يوضح التكامل الوثيق بينها وبين الجهاز العضلي الهيكلي. على سبيل المثال، يشرح كيف تلعب العضلة الحجابية (Diaphragm) دوراً محورياً في عملية التنفس، وكيف تحمي عضلات البطن والجذع الأعضاء الداخلية (مثل الكبد والكلى والأمعاء) وتثبتها أثناء رفع الأثقال. كما يغطي التطبيق أعضاء الغدد الصماء التي تفرز الهرمونات المسؤولة عن تنظيم الأيض (Metabolism) وبناء العضلات.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">MEMBERSHIP</span>
+      <h2>خطط الأسعار</h2>
+      <p>اختر الخطة المناسبة — يمكنك الترقية أو الإلغاء في أي وقت.</p>
+    </div>
+    <div class="pgrid" id="planGrid"></div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap footer-grid">
+    
+    <div class="contact-section">
+      <div class="footer-title">للشراء والاستفسار</div>
+      <div class="contact-methods">
+        <a href="https://wa.me/9647882983338" target="_blank" rel="noopener" class="icon-link wa">
+          <svg><use href="#i-wa"/></svg> واتساب
+        </a>
+        <a href="https://t.me/ahmedjabbar9" target="_blank" rel="noopener" class="icon-link tg">
+          <svg><use href="#i-tg"/></svg> تيليجرام
+        </a>
+        <a href="mailto:en8ahmedjabbar@gmail.com" class="icon-link em">
+          <svg><use href="#i-em"/></svg> البريد الإلكتروني
+        </a>
+      </div>
+    </div>
+
+    <div class="payment-section">
+      <div class="footer-title">طرق الدفع المتاحة</div>
+      <div class="payment-methods">
+        <span class="icon-link usdt" title="USDT">
+          <svg><use href="#i-usdt"/></svg> USDT
+        </span>
+        <span class="icon-link paypal" title="PayPal">
+          <svg><use href="#i-paypal"/></svg> PayPal
+        </span>
+        <span class="icon-link payeer" title="Payeer">
+          <svg><use href="#i-payeer"/></svg> Payeer
+        </span>
+        <span class="icon-link superq" title="SuperQi">
+          <svg><use href="#i-superq"/></svg> SuperQi
+        </span>
+      </div>
+    </div>
+
+    <div class="brand-text">
+      <span class="en-name">HUMAN&nbsp;ATLS<span style="color:var(--c1)">.</span></span>
+      <span class="ar-name">© <span id="year"></span> — جميع الحقوق محفوظة</span>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ============ ADMIN MODAL ============ -->
+<div class="modal" id="adminModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="mcard-modal">
+    <button class="iconbtn closebtn" id="adminClose" aria-label="Close"><svg class="ico sm"><use href="#i-close"/></svg></button>
+
+    <div id="loginView">
+      <h3>لوحة تحكم المالك</h3>
+      <p class="sub">أدخل كلمة المرور للوصول إلى إعدادات الروابط والأسعار.</p>
+      <input type="password" class="field" id="pwInput" placeholder="كلمة المرور" autocomplete="current-password">
+      <p class="err" id="pwErr"></p>
+      <div class="row"><button class="btn-primary" id="loginBtn" style="width:100%">
+        <svg class="ico sm"><use href="#i-lock"/></svg> دخول</button></div>
+    </div>
+
+    <div id="panelView" hidden>
+      <h3>إعدادات التطبيق</h3>
+      <p class="sub">عدّل محتوى JSON مباشرة — الروابط والأسعار.</p>
+      <textarea class="field" id="jsonEditor" spellcheck="false"></textarea>
+      <p class="err" id="saveErr"></p>
+      <div class="row">
+        <button class="btn-primary" id="saveBtn"><svg class="ico sm"><use href="#i-check"/></svg> حفظ وتطبيق</button>
+        <button class="btn-ghost" id="exportBtn" style="padding:10px 16px; font-size:14px; border-radius:12px;"><svg class="ico sm"><use href="#i-download"/></svg> تصدير</button>
+        <button class="btn-ghost" id="resetBtn" style="padding:10px 16px; font-size:14px; border-radius:12px;"><svg class="ico sm"><use href="#i-close"/></svg> استعادة الافتراضي</button>
+      </div>
+      <hr>
+      <label class="label">تغيير كلمة مرور المالك</label>
+      <div class="row" style="margin-top:0">
+        <input type="password" class="field" id="newPw" placeholder="كلمة المرور الجديدة" style="flex:1;min-width:180px">
+        <button class="btn-ghost" id="chpwBtn" style="padding:10px 16px; font-size:14px; border-radius:12px;">تحديث</button>
+      </div>
+      <p class="hint">ملاحظة: الحماية هنا محلية (client-side) لتنظيم الوصول. للحماية القصوى استخدم متغيرات البيئة.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ THEME TOGGLE LOGIC ============ */
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const rootHtml = document.documentElement;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+rootHtml.setAttribute('data-theme', savedTheme);
+updateThemeIcon(savedTheme);
+
+themeToggle.addEventListener('click', () => {
+  const currentTheme = rootHtml.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  rootHtml.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeIcon(newTheme);
+});
+
+function updateThemeIcon(theme) {
+  if (theme === 'dark') {
+    themeIcon.innerHTML = '<use href="#i-sun"/>';
+  } else {
+    themeIcon.innerHTML = '<use href="#i-moon"/>';
+  }
+}
+
+/* ============ APP LOGIC ============ */
+function hash(str){
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i);
+  return (h >>> 0).toString(16);
+}
+
+const WA_NUMBER = "9647882983338";
+
+const DEFAULT_CONFIG = {
+  brand: { name: "HUMAN ATLS", tagline: "Human Anatomy Atlas", currency: "$" },
+  adminHash: hash("admin1234"),
+  plans: [
+    { id: "weekly", name: "أسبوعي", price: 2.99, period: "أسبوع", featured: false, url: "#", features: ["وصول كامل للمحتوى", "تحديثات أسبوعية", "دعم عبر البريد"] },
+    { id: "monthly", name: "شهري", price: 8.99, period: "شهر", featured: true, url: "#", features: ["كل ميزات الأسبوعي", "تحميل أوفلاين كامل", "دعم ذو أولوية", "إلغاء في أي وقت"] },
+    { id: "yearly", name: "سنوي", price: 59.99, period: "سنة", featured: false, url: "#", features: ["توفير 44% مقارنة بالشهري", "كل الميزات السابقة", "جلسة استشارة سنوية"] },
+    { id: "lifetime", name: "مدى الحياة", price: 129.99, period: "مرة واحدة", featured: false, url: "#", features: ["وصول دائم لكل المحتوى", "تحديثات مجانية للأبد", "شارة عضو مؤسس"] }
+  ]
+};
+
+const LS_KEY = "human_atls_config_v11";
+let CONFIG = (() => {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { console.warn("config load failed", e); }
+  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+})();
+
+function persist() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(CONFIG)); }
+  catch (e) { console.warn("config save failed", e); }
+}
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+function attachTilt(el, strength = 5) {
+  el.addEventListener("pointermove", (e) => {
+    if (e.pointerType === "touch") return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(1000px) rotateX(${(-py * strength).toFixed(2)}deg) rotateY(${(px * strength).toFixed(2)}deg) translateY(-3px)`;
+    el.style.setProperty("--mx", ((px + 0.5) * 100).toFixed(1) + "%");
+    el.style.setProperty("--my", ((py + 0.5) * 100).toFixed(1) + "%");
+  });
+  el.addEventListener("pointerleave", () => { el.style.transform = ""; });
+}
+
+function renderPlans() {
+  const grid = $("#planGrid");
+  grid.innerHTML = "";
+  CONFIG.plans.forEach((p) => {
+    const el = document.createElement("article");
+    el.className = "plan" + (p.featured ? " featured" : "");
+    
+    const btnClass = p.featured ? "btn-primary" : "btn-ghost";
+    const btnStyle = p.featured ? "" : "style='border-color:var(--line); color:var(--txt);'";
+    
+    const message = encodeURIComponent(`مرحباً، أريد الاشتراك في الباقة (${p.name}) الخاصة بتطبيق HUMAN ATLS.`);
+    const waUrl = `https://wa.me/${WA_NUMBER}?text=${message}`;
+    
+    el.innerHTML = `
+      ${p.featured ? '<span class="ribbon">الأكثر اختياراً</span>' : ""}
+      <h4>${p.name}</h4>
+      <div class="amt"><b>${CONFIG.brand.currency}${p.price}</b><span>/ ${p.period}</span></div>
+      <ul>
+        ${(p.features || []).map(f => `<li><svg class="ico sm"><use href="#i-check"/></svg><span>${f}</span></li>`).join("")}
+      </ul>
+      <a class="btn ${btnClass}" ${btnStyle} href="${waUrl}" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+        <svg class="ico sm" style="fill:#fff;"><use href="#i-wa"/></svg> اشترك الآن
+      </a>
+    `;
+    
+    const btn = el.querySelector('a');
+    btn.style.width = '100%';
+    btn.style.marginTop = 'auto';
+    
+    if (p.featured) {
+        btn.querySelector('svg').style.fill = '#fff';
+    } else {
+        btn.querySelector('svg').style.fill = '#25D366';
+    }
+    
+    grid.appendChild(el);
+  });
+}
+
+function initTabs() {
+  const tabs = $$('.kb-tab');
+  const panes = $$('.kb-pane');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panes.forEach(p => p.classList.remove('active'));
+      
+      tab.classList.add('active');
+      const target = tab.getAttribute('data-tab');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+}
+
+const modal = $("#adminModal");
+const loginView = $("#loginView");
+const panelView = $("#panelView");
+
+function openAdmin() {
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  loginView.hidden = false;
+  panelView.hidden = true;
+  $("#pwInput").value = "";
+  $("#pwErr").textContent = "";
+  setTimeout(() => $("#pwInput").focus(), 120);
+}
+function closeAdmin() {
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+$("#adminOpen").addEventListener("click", openAdmin);
+$("#adminClose").addEventListener("click", closeAdmin);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeAdmin(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeAdmin(); });
+
+$("#loginBtn").addEventListener("click", tryLogin);
+$("#pwInput").addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+function tryLogin() {
+  const val = $("#pwInput").value;
+  if (hash(val) === CONFIG.adminHash) {
+    loginView.hidden = true;
+    panelView.hidden = false;
+    $("#jsonEditor").value = JSON.stringify({ brand: CONFIG.brand, plans: CONFIG.plans }, null, 2);
+    $("#saveErr").textContent = "";
+  } else {
+    $("#pwErr").textContent = "كلمة المرور غير صحيحة.";
+    $("#pwInput").value = "";
+  }
+}
+
+$("#saveBtn").addEventListener("click", () => {
+  try {
+    const parsed = JSON.parse($("#jsonEditor").value);
+    CONFIG.brand = parsed.brand || CONFIG.brand;
+    CONFIG.plans = Array.isArray(parsed.plans) ? parsed.plans : CONFIG.plans;
+    persist();
+    renderPlans();
+    $("#saveErr").style.color = "var(--c1)";
+    $("#saveErr").textContent = "تم الحفظ والتطبيق بنجاح.";
+    setTimeout(() => { $("#saveErr").textContent = ""; $("#saveErr").style.color = "#ef4444"; }, 2200);
+  } catch (err) {
+    $("#saveErr").style.color = "#ef4444";
+    $("#saveErr").textContent = "JSON غير صالح: " + err.message;
+  }
+});
+
+$("#resetBtn").addEventListener("click", () => {
+  if (!confirm("استعادة الإعدادات الافتراضية؟ سيتم فقدان التعديلات المحفوظة.")) return;
+  localStorage.removeItem(LS_KEY);
+  CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  renderPlans();
+  $("#jsonEditor").value = JSON.stringify({ brand: CONFIG.brand, plans: CONFIG.plans }, null, 2);
+});
+
+$("#exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(CONFIG, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "human-atls-config.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$("#chpwBtn").addEventListener("click", () => {
+  const v = $("#newPw").value.trim();
+  if (v.length < 6) { alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل."); return; }
+  CONFIG.adminHash = hash(v);
+  persist();
+  $("#newPw").value = "";
+  alert("تم تحديث كلمة المرور بنجاح.");
+});
+
+function initReveal() {
+  const els = $$(".reveal");
+  if (!("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("in")); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(e => io.observe(e));
+}
+
+/* ============ INIT ============ */
+document.title = CONFIG.brand.name + " — " + CONFIG.brand.tagline;
+initTabs();
+initReveal();
+renderPlans();
+$("#year").textContent = new Date().getFullYear();
+$$('.tilt').forEach(el => attachTilt(el));
+</script>
+</body>
+</html>
